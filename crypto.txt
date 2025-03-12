@@ -1,0 +1,187 @@
+
+HELLO GUYS,IF U R REFERRING TO THIS ,KINDLY PLEASE  BUY ME  ### 1 DAIRYMILK SILK ### EACH!THANK YOU :))))
+
+EXPERIMENT -1 
+1. Demonstrate the steganography tools used for hiding text inside an image. Also demonstrate how to recover a corrupted image using hexed editor.
+STEPS:
+Create a folder cryptos
+Open notepad,create 2 txt files named t1.txt and t2.txt(type 2 lines in each)->save it inside cryptos folder
+Dowload 2 png images(source.png and stego.png) and save to cryptos folder
+Now create a new zip file(t3.zip) inside the cryptos folder ->hving t1.txt and t2.txt
+Open terminal-> copy /B source.png + t3.zip stego.png  //U will get output as source.png and t3.zip 1 file(S)copied
+Next open stego.png with winrar //the text files will be moved inside tht png
+
+---
+Open image in hex editor:
+For jpg: FF D8 FF E0 ,For png: 89 50 4E 47 0D
+save the img
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -2
+2. Demonstrate the steganography tools for hiding text in an audio file. 
+STEPS:
+Open paint-black bg ,white text - save as bmp file.
+Open the saved bmp in COAGULA LIGHT-Click on 'Render img without noise\blue'-Save as sound file-.wav //.wav extension
+Open SONIC VISUALIZER - open the .wav file - Layer menu - Add spectogram for all channels //The hidden text is seen in the audio file by zooming
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -3
+3. Demonstrate the working of ECB and CBC modes of AES on plain text using Openssl. 
+STEPS:
+Open seed in VM-terminal
+for cbc,
+gedit plain.txt //type 4 lines in the txt file
+openssl enc -aes-256-cbc -pass pass:root123 -p -in plain.txt -out file.txt //U will get,salt=357.. key= ,iv...
+cat file.txt
+openssl enc -aes-256-cbc -pass pass:root123 -d -in file.txt -out file1.txt //U will get the text tht u hd typed intially in plain.txt as o/p
+--
+for ecb,
+gedit plain.txt //type 4 lines in the txt file
+openssl enc -aes-256-ecb -pass pass:root123 -p -in plain.txt -out file.txt //U will get,salt=357.. key= ,iv...
+cat file.txt
+openssl enc -aes-256-ecb -pass pass:root123 -d -in file.txt -out file1.txt //U will get the text tht u hd typed intially in plain.txt as o/p
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -4
+4. Demonstrate the working of ECB and CBC modes of AES on bitmap image using Openssl.
+STEPS:
+Open paint-choose shapes-draw star-fill colour red-save as bitmap image(pic_original.bmp) //(use drag n drop or gmail in the virtualbox to open the bitmap image )
+or
+Open pic_original.bmp in google and open the crypto-lab link -under files needed u get a link pic_original.bmp//download it
+--
+Open terminal in seed
+for ecb,
+openssl enc -aes-128-ecb -e -in pic_original.bmp -out pic_ecb.bmp -k 112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+eog pic_ecb.bmp //will not display any image(error)
+head -c 54 pic_original.bmp > header
+tail -c +55 pic_ecb.bmp > body_ecb
+cat header body_ecb > new_ecb.bmp
+eog new_ecb.bmp  //this will display tht star in a blurred format
+--
+for cbc,
+openssl enc -aes-128-ecb -e -in pic_original.bmp -out pic_cbc.bmp -k 112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+eog pic_cbc.bmp // will not display any img(error)
+head -c 54 pic_original.bmp > header
+tail -c +55 pic_cbc.bmp > body_cbc
+cat header body_cbc > new_cbc.bmp
+eog new_cbc.bmp //this will display full blur image
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -5
+5. Demonstrate the effects of padding in AES using Openssl.
+STEPS:
+Open terminal in seed,type
+echo -n "12345">f1.txt
+echo -n "123456789">f2.txt
+echo -n "1234567890abcdef">f3.txt
+ls -l f*.txt //check for f1,f2,f3
+Next,type
+openssl enc -aes-128-cbc -e -in f1.txt -out f1.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+openssl enc -aes-128-cbc -e -in f2.txt -out f2.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+openssl enc -aes-128-cbc -e -in f3.txt -out f3.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+xxd f1.bin // displayed encrypted values
+xxd f2.bin
+xxd f3.bin
+Next,type
+openssl enc -aes-128-cbc -d -in f1.bin -out f11.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+openssl enc -aes-128-cbc -d -in f2.bin -out f22.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+openssl enc -aes-128-cbc -d -in f3.bin -out f33.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+xxd f11.bin // displays 12345 with padding(Spacing)
+xxd f22.bin //displays  123456789 with padding
+xxd f33.bin //displays 1234567890abcdef with padding
+
+Next,type
+openssl enc -aes-128-cbc -d -in f1.bin -out p1.txt -nopad -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+gedit p1.txt //opens a p1.txt file -displays 12345 followed by some encodings
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -6
+6. Demonstrate the effects of propagation of errors in different modes of AES. Also demonstrate the usage and effects of initialization vector on AES. 
+STEPS:
+Open terminal in seed,type
+For ecb,
+gedit plain.txt // type around 30 lines of random txt
+openssl enc -aes-128-ecb -e -in plain.txt -out cip.txt -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+ghex cip.txt //opens a hex editor-change one bit or 2 values n close it
+openssl enc -aes-128-ecb -d -in cip.txt -out op.txt -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f//displays error propagted text
+gedit op.txt
+
+For cbc,
+gedit plain.txt // type around 30 lines of random txt
+openssl enc -aes-128-cbc -e -in plain.txt -out ciph.txt -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+ghex ciph.txt //opens a hex editor-change one bit or 2 values n close it
+openssl enc -aes-128-cbc -d -in ciph.txt -out op1.txt -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f//displays error propagted text
+gedit op1.txt
+
+--For initialization vector,--
+gedit i.txt
+openssl enc-aes-128-cbc -e -in i.txt -out cc1.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f
+openssl enc-aes-128-cbc -e -in i.txt -out cc2.bin -k 00112233445566778899aabbccddeeff -iv 0102030405060708090a0b0c0d0e0f0 //add a 0 at the end
+xxd cc1.bin //u will get diff values with salted value
+xxd cc2.bin //observe changes in salted value
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -7
+7. Demonstrate the key generation, encryption and decryption procedure of RSA algorithm using Openssl. Also demonstrate the encryption of a secret key using RSA 
+keypair. 
+STEPS:
+Open terminal in seed,type
+openssl rand -hex 16
+openssl rand -hex 32
+openssl rand -hex -out some_data 32
+cat some_data
+
+Next, type
+openssl genrsa //Displays begin and end RSA private key
+openssl genrsa 1024 //displays rsa private key
+
+Next,type
+openssl genrsa 1024 > key.pri //generates rsa private key
+openssl rsa -in key.pri -out key.pub -pubout //writing rsa key
+gedit newrsa.txt // type 2 full sentences in 2 lines in the text file
+openssl rsautl -encrypt -inkey key.pub -pubin -in newrsa.txt -out Earth.enc
+xxd Earth.enc //displays some values
+openssl rsautl -decrypt -inkey key.pri -in Earth.enc -out Earth.dec
+xxd Earth.dec //displays the 2 lines tht u hd typed in newrsa.txt
+
+Next type,
+openssl rand -hex -out encryption.key 32
+openssl rsautl -encrypt -inkey key.pub -pubin -in encryption.key -out encryption.key.enc
+openssl rsautl -decrypt -inkey key.pri -in encryption.key.enc -out encryption.key.dec
+cmp encryption.key encryption.key.dec //if u get no output after this cmd..then it means u hv got the crct o/p
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -8
+8. Capture and analyze the HTTP and HTTPS packets for example.com using the Wireshark tool. 
+STEPS:
+FOR HTTP,
+Open wireshark,stop capture.
+Then start capture again.
+Open http://example.com/ ->in wireshark ->apply filter http ->port no:80 to be shown
+FOR HTTPS,
+Open wireshark,stop capture.
+Then start capture again.
+Open https://example.com/ ->in wireshark ->apply filter ssl ->port no:443 to be shown
+--------------------------------------------------------------------------------------------------------------------------------------------------
+EXPERIMENT -9
+9. Demonstrate the usage of tcpdump to capture packets based on different filters and protocols. Also demonstrate storing and retrieving data from files. 
+STEPS:
+tcpdump,
+Open seed terminal,type
+ifconfig //take ip address
+sudo tcpdump host 198.168.5.50 //ip address of ur website-specified host
+sudo tcpdump -i enp0s3 //give ctrl c ..this is for specified interface
+sudo tcpdump port 80//specified port
+
+sudo tcpdump port 80 -w httppkt.pcap //do not press enter ,open http://example.com ..then come to terminal and press enter and refresh the exmaple.com site for thrice
+sudo tcpdump -r httppkt.pcap //reading the file
+cat httppkt.pcap
+next open wireshark and click on the file like icon-5th icon and type the file name httppkt.pcap
+
+For ICMP,
+Open 2 terminals, 
+ping bnmit.org //1st terminal
+sudo tcpdump icmp and host 192.168.1.2 -w icmppkt.pcap//2nd terminal
+sudo tcpdump icmp and host 192.168.1.2 -r icmppkt.pcap
+next open wireshark and click on the file like icon-5th icon and type the file name icmppkt.pcap
+
+BYE GUYS,IF U HV REFERRED TO THIS ,KINDLY PLEASE  BUY ME  ### 1 DAIRYMILK SILK ### EACH!THANK YOU :))
+
+
+
+
+
